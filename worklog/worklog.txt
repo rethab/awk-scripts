@@ -1,0 +1,3 @@
+2020-08-14;6:30h;performed a lot of work
+2020-08-14;7h;thought about new features
+2020-08-15;8:15h;created awk script to sum things up
