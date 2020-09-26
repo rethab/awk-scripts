@@ -2,12 +2,12 @@
   "total": 100,
   "episodes": [{
     "playedUpTo": 5914,
-    "podcastTitle": "Super Duper Podcast"
+    "podcastTitle": "Super Duper Podcast",
   }, {
     "playedUpTo": 1062,
-    "podcastTitle": "Mega Awesome Podcast"
+    "podcastTitle": "Mega Awesome Podcast",
   }, {
     "playedUpTo": 3542,
-    "podcastTitle": "Mega Awesome Podcast"
+    "podcastTitle": "Mega Awesome Podcast",
   } ]
 }

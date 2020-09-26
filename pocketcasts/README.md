@@ -11,8 +11,8 @@ Unfortunately, pocket casts does not offer an offical way to export the history.
 ```bash
 $> ./sum-by-title.awk history.json 
 title;minutes
-Mega Awesome Podcas;76
-Super Duper Podcas;98
+Super Duper Podcast;98
+Mega Awesome Podcast;76
 ```
 
 ## How To
