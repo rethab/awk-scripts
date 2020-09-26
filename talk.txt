@@ -1,0 +1,164 @@
+
+     
+                  A Workshop About
+     
+        ,---,                  .---.   ,--/  /| 
+       '  .' \                /. ./|,---,': / ' 
+      /  ;    '.          .--'.  ' ;:   : '/ /  
+     :  :       \        /__./ \ : ||   '   ,   
+     :  |   /\   \   .--'.  '   \' .'   |  /    
+     |  :  ' ;.   : /___/ \ |    ' '|   ;  ;    
+     |  |  ;/  \   \;   \  \;      ::   '   \   
+     '  :  | \  \ ,' \   ;  `      ||   |    '  
+     |  |  '  '--'    .   \    .\  ;'   : |.  \ 
+     |  :  :           \   \   ' \ ||   | '_\.' 
+     |  | ,'            :   '  |--" '   : |     
+     `--''               \   \ ;    ;   |,'     
+                          '---"     '---'       
+     
+               by Reto Habluetzel
+     
+           (art by taag @ patorjk.com)
+
+
+
+0. Follow Along
+================
+- Apple's OS and GNU/Linux have AWK installed
+- Otherwise: `docker run -it debian /bin/bash`
+  - caveat: no man pages in docker-debian
+
+- Examples to "think along"
+- Exercises to try things
+
+1. Intro
+========
+
+Created in the seventies by:
+ - Aho, Alfred
+ - Weinberger, Peter
+ - Kernighan, Brian
+ --> hence the name :)
+
+
+- AWK is part of "std unix tools"
+  -  available on virtually any *nix system
+- Different dialects exist these days
+  - eg. gawk (gnu awk), nawk (new awk), mawk (mike's awk)
+  - most operating systems have either of these versions (try `man awk`)
+  - gawk even includes networking
+  - otherwise mostly more built-in functions and features
+
+Why learn AWK?
+- chances are you have seen AWK scripts
+- chances are you have copied AWK scripts
+- chances are you have pasted AWK scripts
+- log analysis, extract values from csv, etc..
+
+Scope for today:
+- Focus is on basic structure
+- We are not going to cover conditionals, loops and built-in functions. 
+- We are not going to cover extensions available in GAWK or NAWK 
+
+2. Basic Structure
+==================
+
+- line based
+- pattern { action }
+- omitting the pattern means always run the action
+- omitting the action means print the entire line
+- $0 represents the entire record, $1...$NF are the fields
+
+Example:
+ - `echo -e "1 a\n2 b" | awk ' $1==2 { print $2 }'`
+ - `echo "foo bar" | awk '{print $NF, $1 $0}'`
+
+Hints:
+ - `echo -e` allows us to use \n for newlines
+ - print with comma adds a space
+
+
+Exercises: 
+- Print second last field
+- In a file (name, age), print lines where age is > 7 
+  - hint: `echo -e "alice 8\nbob 7\ncandice 9"`
+
+
+More Patterns:
+- if true, the action is executed
+- 0 means false, everything else means true
+- can be regular expression or other expression
+
+Example:
+- `echo -e "foo\nbar" | awk '/^f/'`
+- `echo -e "foo bar\nbar foo" | awk '$2 ~ /^.o/'`
+
+
+Exercise:
+- print container id of running docker image 'postgres' 
+  - hint: use `docker ps`
+  - Sample output of `docker ps`:
+   ```
+   CONTAINER ID        IMAGE      STATUS         PORTS       
+   ad4fcc764c6a        postgres   Up 4 seconds   5432->5432  
+   b07c84238fb8        redis      Up 4 seconds   6379->6379  
+   ```
+
+Repeat Patterns and Actions:
+- an AWK program can have many patterns and actions
+
+Example:
+- `echo -e "1 a\n2 b" | awk '{print $1} {print $2}'` 
+- `echo -e "1\n2" | awk '{print $1} $1==1'`
+
+Special Patterns:
+- BEGIN: executed before any lines are processed
+- END: executed after all lines have been processed
+
+Example:
+`echo -e "1\n2\n3" | awk 'BEGIN{print "starting to count.."}{cnt++}END{print "Lines:", cnt}'`
+
+Hint:
+- use BEGIN to print headers (eg. csv)
+- use BEGIN for readable script:
+ - `docker ps | awk 'BEGIN{cont_id=1;image=2;}$image=="postgres"{print $cont_id}'`
+
+Built-in Variables to modify input and output:
+- can be set in the program, eg. BEGIN{FS=":"}
+
+Most important variables: 
+- FS: field separator, can also be set as option 'awk -F: ', defaults to space 
+- OFS: output field separator, note that when printing multiple things with a comma (eg. {print $1, $2}' the OFS is used, defaults to space
+- NF: number of fields in the record
+- NR: number of record (current line, first line is 1)
+- RS: input record separator (defaults to newline), this tells AWK what it should view as a line 
+- ORS: output record separator (defaults to newline)
+
+
+Exercises: 
+- print image and container id (hint: `docker ps`) as csv and with the line number (starting at 0) prepended as first column
+  - no docker? `echo -e "CONTAINER IMAGE NAMES\nc88a15a04e60 postgres ecstatic_hoover`
+  - eg. "0;postgres;c88a15a04e60"
+- print all userids and usernames with bash as login shell (see /etc/passwd), separated by a space 
+
+
+
+3. Exercises
+============
+- fizzbuzz: echo 15 | awk MYSCRIPT
+- how many ways can you come up with to print empty lines?
+- what is the shortest program you can write in awk that does something?
+
+
+
+4. Stack Overflow
+=================
+Bash tool to get nth line from a file
+How to use “:” as awk field separator?
+Using awk to print all columns from the nth to the last
+
+
+5. Links
+========
+Tutorial/Cheatsheet: https://www.grymoire.com/Unix/Awk.html 
+Posix Spec: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/awk.html
